@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 public class Transformation {
 	private final static String TABLE_INPUT = "TableInput";
 	private final static String DIMENSION_LOOKUP = "DimensionLookup";
+	private final static String SCRIPT_VALUE_LOOKUP="ScriptValueMod";
 	private String name;
 	private String directory;
 	private List<Step> mSteps;
@@ -33,7 +34,9 @@ public class Transformation {
 				newStep = new TableInputStep(stepFromXML);
 			} else if (type.equalsIgnoreCase(DIMENSION_LOOKUP)) {
 				newStep = new DimensionLookup(stepFromXML);
-			} else {
+			} else if (type.equalsIgnoreCase(SCRIPT_VALUE_LOOKUP)) {
+				newStep = new ScriptValueMod(stepFromXML);
+			}else {
 				newStep = new Step();
 			}
 

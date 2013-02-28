@@ -13,7 +13,7 @@ public class DBLookup extends Step {
 	private String connection;
 	private String table;
 	List<TheKey> keys;
-	List<TheValue> values;
+	List<LookupField> values;
 
 	class TheKey{
 
@@ -38,35 +38,15 @@ public class DBLookup extends Step {
 		}
 	}
 
-	class TheValue{
-
-		String name;
-		String rename;
-
-		public TheValue(Element valueFromXML) {
-
-			name=valueFromXML.getElementsByTag("name").first().text();
-			if(valueFromXML.getElementsByTag("rename").first()!=null){
-				rename=valueFromXML.getElementsByTag("rename").first().text();
-			}
-
-			// TODO Auto-generated constructor stub
-		}
-
-		public String getTheValue(){
-			return "name: "+name+"; rename: "+rename;
-		}
-	}
-
 	public DBLookup(Element stepFromXML) {
 		connection=stepFromXML.getElementsByTag("connection").first().text();
 		table=stepFromXML.getElementsByTag("table").first().text();
 		Elements valuesFromXML=stepFromXML.getElementsByTag("value");
 		if (values==null){
-			values=new ArrayList<TheValue>();
+			values=new ArrayList<LookupField>();
 		}
 		for(Element valueFromXML: valuesFromXML){
-			TheValue value= new TheValue(valueFromXML);
+			LookupField value= new LookupField(valueFromXML);
 			values.add(value);
 
 		};
@@ -83,8 +63,8 @@ public class DBLookup extends Step {
 	
 	public String getProperties() {
 		String printValues="";
-		for(TheValue value:this.values){
-			printValues+=value.getTheValue();
+		for(LookupField value:this.values){
+			printValues+=value.getLookupField();
 		}
 		String printKeys="";
 		for(TheKey key:this.keys){

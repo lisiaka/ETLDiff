@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 
 public class ScriptValueMod extends Step{
 	List<JavaScript> javaScripts;
+	List<LookupField> fields;
 
 class JavaScript{
 	String name;
@@ -42,15 +43,29 @@ public ScriptValueMod(Element stepFromXML) {
 		javaScripts.add(javaScript);
 
 	};
+	
+	Elements fieldsFromXML=stepFromXML.getElementsByTag("field");
+	if (fields==null){
+		fields=new ArrayList<LookupField>();
+	}
+	for(Element fieldFromXML: fieldsFromXML){
+		LookupField field= new LookupField(fieldFromXML);
+		fields.add(field);
+
+	};
 	// TODO Auto-generated constructor stub
 }
 
 public String getProperties() {
-	String javaScripts="";
+	String printJavaScripts="";
 	for(JavaScript javaScript:this.javaScripts){
-		javaScripts+=javaScript.getJavaScript();
+		printJavaScripts+=javaScript.getJavaScript();
 	}
-	return this.getName()+": "+this.getType()+"; Java Scripts: "+javaScripts;
+	String printFields="";
+	for(LookupField field:this.fields){
+		printFields+=field.getLookupField();
+	}
+	return this.getName()+": "+this.getType()+"; Java Scripts: "+printJavaScripts+"; Fields: "+printFields;
  
 }
 

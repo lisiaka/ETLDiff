@@ -10,6 +10,7 @@ public class Transformation {
 	private final static String TABLE_INPUT = "TableInput";
 	private final static String DIMENSION_LOOKUP = "DimensionLookup";
 	private final static String SCRIPT_VALUE_LOOKUP="ScriptValueMod";
+	private final static String DB_LOOKUP="DBLookup";
 	private String name;
 	private String directory;
 	private List<Step> mSteps;
@@ -36,6 +37,8 @@ public class Transformation {
 				newStep = new DimensionLookup(stepFromXML);
 			} else if (type.equalsIgnoreCase(SCRIPT_VALUE_LOOKUP)) {
 				newStep = new ScriptValueMod(stepFromXML);
+			}else if (type.equalsIgnoreCase(DB_LOOKUP)) {
+				newStep = new DBLookup(stepFromXML);
 			}else {
 				newStep = new Step();
 			}

@@ -12,42 +12,50 @@ public class Transformation {
 	private final static String SCRIPT_VALUE_LOOKUP="ScriptValueMod";
 	private final static String DB_LOOKUP="DBLookup";
 	private final static String SYSTEM_INFO="SystemInfo";
+	private final static String TABLE_OUTPUT="TableOutput";
+	private final static String SELECT_VALUES="SelectValues";
 	private String name;
 	private String directory;
 	private List<Step> mSteps;
 
 
 
-	public Transformation(Element transformation) {
-		Element transformationInfo = transformation.getElementsByTag("info").first();
-		if (transformationInfo!=null){
-			Element transformationName = transformationInfo.getElementsByTag("name").first();
+	public Transformation(Element element) {
+		Element transformationInfo = element.select("info").first();
+		if (transformationInfo != null){
+			Element transformationName = transformationInfo.select("name").first();
 			name = transformationName.text();
-			Element transformationDir = transformationInfo.getElementsByTag("directory").first();
+			
+			Element transformationDir = transformationInfo.select("directory").first();
 			directory = transformationDir.text();
-
 		}
-		Elements stepsFromXML = transformation.getElementsByTag("step");
-		for(Element stepFromXML : stepsFromXML){
-			String type = stepFromXML.getElementsByTag("type").first().text();
-			Step newStep = null;
+		
+		Step newStep = null;
+		Elements stepElements = element.select("step");
+		for (Element stepElement : stepElements) {
+			String type = stepElement.select("type").first().text();
 
 			if (type.equalsIgnoreCase(TABLE_INPUT)) {
-				newStep = new TableInputStep(stepFromXML);
+				newStep = new TableInputStep(stepElement);
 			} else if (type.equalsIgnoreCase(DIMENSION_LOOKUP)) {
-				newStep = new DimensionLookup(stepFromXML);
+				newStep = new DimensionLookup(stepElement);
 			} else if (type.equalsIgnoreCase(SCRIPT_VALUE_LOOKUP)) {
-				newStep = new ScriptValueMod(stepFromXML);
+				newStep = new ScriptValueMod(stepElement);
 			}else if (type.equalsIgnoreCase(DB_LOOKUP)) {
-				newStep = new DBLookup(stepFromXML);
+				newStep = new DBLookup(stepElement);
 			}else if (type.equalsIgnoreCase(SYSTEM_INFO)) {
-				newStep = new SystemInfo(stepFromXML);
+				newStep = new SystemInfo(stepElement);
+			}else if (type.equalsIgnoreCase(TABLE_OUTPUT)) {
+				newStep = new TableOutput(stepElement);
+			}else if (type.equalsIgnoreCase(SELECT_VALUES)) {
+				newStep = new SelectValues(stepElement);
 			}else {
 				newStep = new Step();
 			}
 
-			newStep.setName(stepFromXML.getElementsByTag("name").first().text());
-			newStep.setType(stepFromXML.getElementsByTag("type").first().text());
+			newStep.setName(stepElement.select("name").first().text());
+			newStep.setType(stepElement.select("type").first().text());
+			
 			if (mSteps == null){
 				this.mSteps = new ArrayList<Step>();
 			}

@@ -1,40 +1,44 @@
 package com.mariaruchko.etldiff;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 public class Hello {
 	public static void main(String args[]) {
-		List<Transformation> transformations;
-		
-		File input = new File("../etl_compare/Scandpower_ETL.xml");
-		Document doc = null;
+		InputStream inputStream = null;
+		Document document = null;
 		try {
-			doc = Jsoup.parse(input, "UTF-8");
+			inputStream = new FileInputStream(new File("/Users/maria/Documents/workspace/etl_compare/Scandpower_ETL.xml"));
+			document = Jsoup.parse(inputStream, "UTF-8", "", Parser.xmlParser());
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	
-		transformations = new ArrayList<Transformation>();
-		Elements transformationsFromXML = doc.getElementsByTag("transformation");
-		for (Element transformation : transformationsFromXML) {
-			Transformation trans = new Transformation(transformation);
-			transformations.add(trans);
 		}
 		
-		for (Transformation trans : transformations) {
-			System.out.println(trans.getDirectory() + "/" + trans.getName());
-			for(Step step : trans.getSteps()){
+		List<Transformation> transformations = null;
+		Elements elements = document.select("transformation");
+		for (Element element : elements) {
+			if (transformations == null) {
+				transformations = new ArrayList<Transformation>();
+			}
+
+			Transformation transformation = new Transformation(element);
+			transformations.add(transformation);
+		}
+
+		for (Transformation transformation : transformations) {
+			System.out.println(transformation.getDirectory() + "/" + transformation.getName());
+			for(Step step : transformation.getSteps()){
 				System.out.println(step.getProperties());
 			}
 		}
-		
 	}
 }

@@ -11,7 +11,7 @@ public class TableInputStep extends Step {
 		sql=stepFromXML.getElementsByTag("sql").first().text();	
 	}
 
-	public String getProperties() {
+	public String printProperties() {
 		return this.getName()+": "+this.getType()+"; connection: "+connection+"; sql: "+sql;
 	}
 

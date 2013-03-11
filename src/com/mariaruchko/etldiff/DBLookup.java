@@ -1,7 +1,7 @@
 package com.mariaruchko.etldiff;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -12,10 +12,22 @@ import org.jsoup.select.Elements;
 public class DBLookup extends Step {
 	private String connection;
 	private String table;
-	List<TheKey> keys;
-	List<LookupField> values;
+	Set<TheKey> keys;
+	Set<LookupField> values;
 
 	class TheKey{
+
+		public String getName() {
+			return name;
+		}
+
+		public String getField() {
+			return field;
+		}
+
+		public String getCondition() {
+			return condition;
+		}
 
 		String name;
 		String field;
@@ -33,9 +45,43 @@ public class DBLookup extends Step {
 			// TODO Auto-generated constructor stub
 		}
 
-		public String getTheKey(){
+		public String printTheKey(){
 			return "key: "+name+condition+field;
 		}
+		
+		@Override
+	    public int hashCode() {
+	        final int prime = 31;
+	        int result = 1;
+	        result = prime * result + ((name == null) ? 0 : name.hashCode());
+	        result = prime * result + ((field == null) ? 0 : field.hashCode());
+	        result = prime * result + ((condition == null) ? 0 : condition.hashCode());
+	        
+	        return result;
+	    }
+		
+		@Override
+	    public boolean equals(Object obj) {
+	        if (obj == this) {
+	            return true;
+	        }
+	        if (obj == null || obj.getClass() != this.getClass()) {
+	            return false;
+	        }
+
+	       TheKey mTheKey=(TheKey)obj;
+	        return 
+	        
+	                 (name == mTheKey.getName()
+	                     || (name != null && name.equals(mTheKey.getName())))
+	                && (field == mTheKey.getField()
+	                     || (field != null && field.equals(mTheKey.getField())))
+	                && (condition == mTheKey.getCondition()
+	                     || (condition != null && condition.equals(mTheKey.getCondition())))
+	                  ;
+	                     
+	    }
+
 	}
 
 	public DBLookup(Element stepFromXML) {
@@ -43,7 +89,7 @@ public class DBLookup extends Step {
 		table=stepFromXML.getElementsByTag("table").first().text();
 		Elements valuesFromXML=stepFromXML.getElementsByTag("value");
 		if (values==null){
-			values=new ArrayList<LookupField>();
+			values=new HashSet<LookupField>();
 		}
 		for(Element valueFromXML: valuesFromXML){
 			LookupField value= new LookupField(valueFromXML);
@@ -53,7 +99,7 @@ public class DBLookup extends Step {
 
 		Elements keysFromXML=stepFromXML.getElementsByTag("key");
 		if (keys==null){
-			keys=new ArrayList<TheKey>();
+			keys=new HashSet<TheKey>();
 		}
 		for(Element keyFromXML:keysFromXML){
 			TheKey key= new TheKey(keyFromXML);
@@ -61,15 +107,76 @@ public class DBLookup extends Step {
 		}
 	}
 	
-	public String getProperties() {
+	
+	
+	public String printProperties() {
 		String printValues="";
 		for(LookupField value:this.values){
-			printValues+=value.getLookupField();
+			printValues+=value.printLookupField();
 		}
 		String printKeys="";
 		for(TheKey key:this.keys){
-			printKeys+=key.getTheKey();
+			printKeys+=key.printTheKey();
 		}
 		return this.getName()+": "+this.getType()+"; connection: "+connection+"; table: "+table+"; keys: "+printKeys+"; values: "+printValues;
+	}
+	
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((connection == null) ? 0 : connection.hashCode());
+        result = prime * result + ((table == null) ? 0 : table.hashCode());
+        result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+        result = prime * result + ((values == null) ? 0 : values.hashCode());
+        return result;
+    }
+	
+	@Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+       DBLookup mDBLookup=(DBLookup)obj;
+        return 
+        
+                 (connection == mDBLookup.getConnection() 
+                     || (connection != null && connection.equals(mDBLookup.getConnection())))
+                && (table == mDBLookup.getTable()
+                     || (table != null && table.equals(mDBLookup.getTable())))
+                && (keys == mDBLookup.getKeys()
+                     || (keys != null && keys.equals(mDBLookup.getKeys())))
+                && (values == mDBLookup.getValues()
+                     || (values != null && values.equals(mDBLookup.getValues())))
+                     ;
+                     
+    }
+
+
+
+	public String getConnection() {
+		return connection;
+	}
+
+
+
+	public String getTable() {
+		return table;
+	}
+
+
+
+	public Set<TheKey> getKeys() {
+		return keys;
+	}
+
+
+
+	public Set<LookupField> getValues() {
+		return values;
 	}
 }

@@ -40,7 +40,7 @@ public class SystemInfo extends Step {
 		};
 	}
 	
-	public String getProperties() {
+	public String printProperties() {
 		String printFields="";
 		for(Field field:this.fields){
 			printFields+=field.getField();

@@ -37,7 +37,7 @@ public class SelectValues extends Step {
 		}
 	}
 
-	public String getProperties() {
+	public String printProperties() {
 		String result = null;
 		
 		StringBuilder sbFields = null;
@@ -46,7 +46,7 @@ public class SelectValues extends Step {
 				if (sbFields == null) {
 					sbFields = new StringBuilder();
 				}
-				sbFields.append(field.getLookupField());
+				sbFields.append(field.printLookupField());
 			}
 		}
 		
@@ -61,7 +61,7 @@ public class SelectValues extends Step {
 				if (sbMetaFields == null) {
 					sbMetaFields = new StringBuilder();
 				}
-				sbMetaFields.append(metaField.getLookupField());
+				sbMetaFields.append(metaField.printLookupField());
 			}
 		}
 		

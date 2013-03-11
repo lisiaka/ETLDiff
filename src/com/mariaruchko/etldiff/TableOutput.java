@@ -16,7 +16,7 @@ public TableOutput(Element stepFromXML){
 	
 }
 
-public String getProperties() {
+public String printProperties() {
 	return this.getName()+": "+this.getType()+"; connection: "+connection+"; table: "+table+(truncate.equals("Y")?"; truncate":"")+"; commit: "+commit;
 }
 }

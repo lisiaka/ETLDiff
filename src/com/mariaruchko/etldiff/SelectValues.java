@@ -1,22 +1,31 @@
 package com.mariaruchko.etldiff;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
 public class SelectValues extends Step {
-	List<LookupField> mFields;
-	List<LookupField> mMetaFields;
+	
+	public Set<LookupField> getmFields() {
+		return mFields;
+	}
+
+	public Set<LookupField> getmMetaFields() {
+		return mMetaFields;
+	}
+
+	Set<LookupField> mFields;
+	Set<LookupField> mMetaFields;
 
 	public SelectValues(Element element){
 		Elements fieldElements = element.select("field");
 		if (fieldElements != null) {
 			for (Element fieldElement : fieldElements) {
 				if (mFields == null){
-					this.mFields = new ArrayList<LookupField>();
+					this.mFields = new HashSet<LookupField>();
 				}
 
 				LookupField field = new LookupField(fieldElement);
@@ -30,7 +39,7 @@ public class SelectValues extends Step {
 				LookupField metaField = new LookupField(metaElement);
 
 				if (mMetaFields == null){
-					this.mMetaFields = new ArrayList<LookupField>();
+					this.mMetaFields = new HashSet<LookupField>();
 				}
 				mMetaFields.add(metaField);
 			}
@@ -75,5 +84,33 @@ public class SelectValues extends Step {
 			(fields != null ? "; fields:" + fields : "") +
 			(metaFields != null ? "; meta:" + metaFields : "");
 		return result;
+	}
+	
+	@Override
+	public int hashCode() {
+	    final int prime = 31;
+	    int result = 1;
+	    result = prime * result + ((mFields == null) ? 0 : mFields.hashCode());
+	    result = prime * result + ((mMetaFields == null) ? 0 : mMetaFields.hashCode());
+	    return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+	    if (obj == this) {
+	        return true;
+	    }
+	    if (obj == null || obj.getClass() != this.getClass()) {
+	        return false;
+	    }
+
+	    SelectValues mSelectValues=(SelectValues)obj;
+	    return 
+	    
+	             (mFields== mSelectValues.getmFields()
+	                 || (mFields != null && mFields.equals(mSelectValues.getmFields())))
+	            && (mMetaFields == mSelectValues.getmMetaFields()
+	                 || (mMetaFields != null && mMetaFields.equals(mSelectValues.getmMetaFields())));
+	                 
 	}
 }

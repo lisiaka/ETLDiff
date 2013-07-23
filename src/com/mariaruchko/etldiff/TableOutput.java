@@ -75,4 +75,36 @@ public boolean equals(Object obj) {
 public String printProperties() {
 	return this.getName()+": "+this.getType()+"; connection: "+connection+"; table: "+table+(truncate.equals("Y")?"; truncate":"")+"; commit: "+commit;
 }
+
+@Override
+public String compare(Step step) {
+	String result="";
+	if (step == this) {
+   //     result = step.getName()+" and "+this.getName() +" steps are identical ";
+    }
+    if (step == null || step.getClass() != this.getClass()) {
+        result = "Steps are of different types";
+    }
+
+    TableOutput mTableOutput=(TableOutput)step;
+   
+	if(!connection.equals(mTableOutput.getConnection())){
+		result=result+"Different connections "+connection+ " vs "+mTableOutput.getConnection()+" in "+mTableOutput.getName();
+	}
+	if(!table.equals(mTableOutput.getTable())){
+		result=result+"Different tables "+table+ " vs "+mTableOutput.getTable()+" in "+mTableOutput.getName();
+	}
+	if(!truncate.equals(mTableOutput.getTruncate())){
+		result=result+"Different truncate "+truncate+" vs "+mTableOutput.getTruncate()+" in "+mTableOutput.getName();
+	}
+	if(!commit.equals(mTableOutput.getCommit())){
+		result=result+"Different commit "+commit+" vs "+mTableOutput.getCommit()+" in "+mTableOutput.getName();
+	}
+	else{
+		//result=mTableOutput.getName()+" steps are identical.";
+	}
+	
+	// TODO Auto-generated method stub
+	return result;
+}
 }

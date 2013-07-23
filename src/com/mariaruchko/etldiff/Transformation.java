@@ -1,5 +1,8 @@
 package com.mariaruchko.etldiff;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
@@ -16,7 +19,7 @@ public class Transformation {
 	private final static String SELECT_VALUES="SelectValues";
 	private String name;
 	private String directory;
-	private Set<Step> mSteps;
+	private Map<String,Step> mSteps;
 
 
 
@@ -25,11 +28,11 @@ public class Transformation {
 		if (transformationInfo != null){
 			Element transformationName = transformationInfo.select("name").first();
 			name = transformationName.text();
-			
+
 			Element transformationDir = transformationInfo.select("directory").first();
 			directory = transformationDir.text();
 		}
-		
+
 		Step newStep = null;
 		Elements stepElements = element.select("step");
 		for (Element stepElement : stepElements) {
@@ -55,12 +58,12 @@ public class Transformation {
 
 			newStep.setName(stepElement.select("name").first().text());
 			newStep.setType(stepElement.select("type").first().text());
-			
+
 			if (mSteps == null){
-				this.mSteps = new HashSet<Step>();
+				this.mSteps = new HashMap<String,Step>();
 			}
 
-			mSteps.add(newStep);	
+			mSteps.put(newStep.getName(),newStep);	
 		}
 	}
 
@@ -88,47 +91,103 @@ public class Transformation {
 		this.directory = directory;
 	}
 
-	public Set<Step> getSteps(){
+	public Map<String,Step> getSteps(){
 		return mSteps;
 	}
-	
-	@Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + mSteps.hashCode();
-        return result;
-    }
 
 	@Override
-    public boolean equals(Object obj) {
-        boolean result = false;
-        
-		if (obj == this) {
-            result = true;
-        } else if (obj == null || obj.getClass() != this.getClass()) {
-            result = false;
-        } else {
-        	Transformation trans = (Transformation) obj;
-        	
-        	Set<Step> otherSteps = trans.getSteps();
-        	result = mSteps.equals(otherSteps);
-        }
-        
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + mSteps.hashCode();
 		return result;
-        /*
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		boolean result = false;
+
+		if (obj == this) {
+			result = true;
+		} else if (obj == null || obj.getClass() != this.getClass()) {
+			result = false;
+		} else {
+			Transformation trans = (Transformation) obj;
+
+			Map<String,Step> otherSteps = trans.getSteps();
+			result = mSteps.equals(otherSteps);
+		}
+
+		return result;
+		/*
                  (name == trans.getName() 
                      || (name != null && name.equals(trans.getName())))
                 && (directory == trans.getDirectory() 
                      || (directory != null && directory.equals(trans.getDirectory())));
-                     */
-    }
-	
+		 */
+	}
+
 	public Boolean hasThesameName(Transformation transformation){
-			Boolean result=false;
-			if (name!=null){
-				result=name.equals(transformation.getName());
+		Boolean result=false;
+		if (name!=null){
+			result=name.equals(transformation.getName());
+		}
+		return result;
+	}
+
+
+
+	public String compare(Transformation transformation) {
+		String result="";
+		if(this.equals(transformation)){
+			result="Transformations are identical";
+		}
+		else{
+			System.out.println("Compare transformation "+this.name+" to transformation "
+					+transformation.getName()+" - "+this.getSteps().size()+ " steps against "+transformation.getSteps().size());
+
+
+
+			Set<String> sameSteps = new HashSet<String>();
+
+			for(String stepName: transformation.getSteps().keySet()){
+				Step step=transformation.getSteps().get(stepName);
+
+				if(this.getSteps().get(stepName)!=null){
+					result=result+step.compare(this.getSteps().get(stepName))+(step.compare(this.getSteps().get(stepName))==""?"":"\n");
+					sameSteps.add(stepName);
+				}
+
 			}
+
+
+
+			if(sameSteps.size()!=transformation.getSteps().keySet().size()){
+				result=result+Format.formatAsHeader("New steps: ",4);
+				String tempResult="";
+			for(String stepName: transformation.getSteps().keySet() ){
+				if(!sameSteps.contains(stepName)){
+					tempResult=tempResult+Format.formatAsListItem(stepName+" ("+transformation.getSteps().get(stepName).getType()+")"+transformation.getSteps().get(stepName).printProperties())+"\n";
+				}
+			}
+			result=result+tempResult;
+			}
+
+			if(sameSteps.size()!=this.getSteps().keySet().size()){
+			result=result+Format.formatAsHeader("Missing steps: ",4);
+			String tempResult="";
+			for(String stepName: this.getSteps().keySet() ){
+				if(!sameSteps.contains(stepName)){
+					tempResult=tempResult+stepName+" ("+this.getSteps().get(stepName).getType()+")"+this.getSteps().get(stepName).printProperties()+"\n";
+				}
+			}
+			result=result+tempResult;
+			}
+
+		}
+
+
+		// TODO Auto-generated method stub
 		return result;
 	}
 

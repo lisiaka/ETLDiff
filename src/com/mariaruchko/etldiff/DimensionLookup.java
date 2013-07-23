@@ -181,4 +181,38 @@ public class DimensionLookup extends Step {
                      ;
                      
     }
+	
+	@Override
+	public String compare(Step step) {
+		String result="";
+		if (step == this) {
+       //     result = step.getName()+" and "+this.getName() +" steps are identical ";
+        }
+        if (step == null || step.getClass() != this.getClass()) {
+            result = "Steps are of different types";
+        }
+
+        DimensionLookup mDimensionLookup=(DimensionLookup)step;
+       
+		if(!connection.equals(mDimensionLookup.getConnection())){
+			result=result+"Different connections "+connection+ " vs "+mDimensionLookup.getConnection()+" in "+mDimensionLookup.getName();
+		}
+		if(!table.equals(mDimensionLookup.getTable())){
+			result=result+"Different tables "+table+ " vs "+mDimensionLookup.getTable()+" in "+mDimensionLookup.getName();
+		}
+		if(!fields.equals(mDimensionLookup.getFields())){
+			result=result+"Different fields in "+mDimensionLookup.getName();
+		}
+		if(!dateFromField.equals(mDimensionLookup.getDateFromField())){
+			result=result+"Different dateFrom "+dateFromField+" vs "+mDimensionLookup.getDateFromField()+" in "+mDimensionLookup.getName();
+		}
+		if(!dateToField.equals(mDimensionLookup.getDateToField())){
+			result=result+"Different dateTo "+dateToField+" vs "+mDimensionLookup.getDateToField()+" in "+mDimensionLookup.getName();
+		}
+		else{
+			//result=mDimensionLookup.getName()+" steps are identical.";
+		}
+		// TODO Auto-generated method stub
+		return result;
+	}
 }

@@ -50,7 +50,34 @@ public class TableInputStep extends Step {
 	}
 	
 	public String printProperties() {
-		return this.getName()+": "+this.getType()+"; connection: "+connection+"; sql: "+sql;
+		return this.getName()+": "+this.getType()+"; connection: "+connection+"; sql: "+Format.formatAsParagraph(sql, "sql");
 	}
 
+	@Override
+	public String compare(Step step) {
+		String result="";
+		if (step == this) {
+	   //     result = step.getName()+" and "+this.getName() +" steps are identical ";
+	    }
+	    if (step == null || step.getClass() != this.getClass()) {
+	        result = "Steps are of different types";
+	    }
+
+	    TableInputStep tableInputStep=(TableInputStep)step;
+	   
+		if(!connection.equals(tableInputStep.getConnection())){
+			result=result+"Different connections "+connection+ " vs "+tableInputStep.getConnection()+" in "+tableInputStep.getName();
+		}
+		
+		
+		if(!sql.equals(tableInputStep.getSql())){
+			result=result+"Different sql in "+this.getName();
+		}
+		else{
+			//result=tableInputStep.getName()+" steps are identical.";
+		}
+		
+		// TODO Auto-generated method stub
+		return result;
+	}
 }

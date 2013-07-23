@@ -108,9 +108,35 @@ public class SelectValues extends Step {
 	    return 
 	    
 	             (mFields== mSelectValues.getmFields()
-	                 || (mFields != null && mFields.equals(mSelectValues.getmFields())))
+	                 || (mFields != null && mSelectValues.getmFields()!=null && mFields.equals(mSelectValues.getmFields())))
 	            && (mMetaFields == mSelectValues.getmMetaFields()
-	                 || (mMetaFields != null && mMetaFields.equals(mSelectValues.getmMetaFields())));
+	                 || (mMetaFields != null && mSelectValues.getmMetaFields()!=null && mMetaFields.equals(mSelectValues.getmMetaFields())));
 	                 
+	}
+	
+	@Override
+	public String compare(Step step) {
+		String result="";
+		if (step == this) {
+       //     result = step.getName()+" and "+this.getName() +" steps are identical ";
+        }
+        if (step == null || step.getClass() != this.getClass()) {
+            result = "Steps are of different types";
+        }
+
+        SelectValues selectValues=(SelectValues)step;
+       
+		
+		if(selectValues.getmFields()!=null && !mFields.equals(selectValues.getmFields())){
+			result=result+"Different fields in "+this.getName();
+		}
+		if(selectValues.getmMetaFields()!=null&&!mMetaFields.equals(selectValues.getmMetaFields())){
+			result=result+"Different meta fields in "+this.getName();
+		}
+		else{
+			//result=selectValues.getName()+" steps are identical.";
+		}
+		// TODO Auto-generated method stub
+		return result;
 	}
 }

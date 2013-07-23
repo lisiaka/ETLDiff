@@ -49,5 +49,25 @@ public class Step {
                      || (type != null && type.equals(step.getType())));
                      
     }
+	
+	public String compare(Step step) {
+		String result="";
+		
+		if(type.equals(step.getType())){
+			String stepsNames="";
+			if(step.getName().equals(this.getName())){
+				stepsNames=step.getName();
+			}
+			else
+			{
+				stepsNames=step.getName()+" and "+this.getName();
+			}
+			result=Format.formatAsParagraph("Steps "+stepsNames+" are of the same type "+type+". Comparison for these types is not implemented","notimplemented");
+		}else{
+			result=Format.formatAsParagraph("Incompatible types "+type+" and "+step.getType(),"details");
+		}
+		// TODO Auto-generated method stub
+		return result;
+	}
 
 }

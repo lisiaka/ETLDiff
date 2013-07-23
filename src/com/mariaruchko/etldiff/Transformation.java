@@ -19,6 +19,9 @@ public class Transformation {
 	private final static String SELECT_VALUES="SelectValues";
 	private final static String STREAM_LOOKUP="StreamLookup";
 	private final static String TEXT_FILE_OUTPUT="TextFileOutput";
+	private final static String FILTER_ROWS="FilterRows";
+	private final static String EXEC_SQL="ExecSQL";
+	private final static String GET_VARIABLE="GetVariable";
 	
 	private String name;
 	private String directory;
@@ -60,13 +63,18 @@ public class Transformation {
 				newStep = new StreamLookup(stepElement);
 			}else if (type.equalsIgnoreCase(TEXT_FILE_OUTPUT)) {
 				newStep = new TextFileOutput(stepElement);
+			}else if (type.equalsIgnoreCase(FILTER_ROWS)) {
+				newStep = new FilterRows(stepElement);
+			}else if (type.equalsIgnoreCase(EXEC_SQL)) {
+				newStep = new ExecSQL(stepElement);
 			}else {
 				newStep = new Step();
 			}
 
 			newStep.setName(stepElement.select("name").first().text());
-			newStep.setType(stepElement.select("type").first().text());
+			newStep.setType(type);
 			newStep.setTransformationName(this.getName());
+			newStep.setStepElement(stepElement);
 
 			if (mSteps == null){
 				this.mSteps = new HashMap<String,Step>();

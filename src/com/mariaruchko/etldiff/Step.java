@@ -1,11 +1,26 @@
 package com.mariaruchko.etldiff;
 
+import org.jsoup.nodes.Element;
+
 
 
 public class Step {
 	private String name;
 	private String type;
 	private String transformationName;
+	private Element stepElement;
+	
+	public Element getStepElement() {
+		return stepElement;
+	}
+	public void setStepElement(Element stepElement) {
+		this.stepElement = stepElement;
+	}
+	public Step() {
+		
+		
+		// TODO Auto-generated constructor stub
+	}
 	
 	public String getTransformationName() {
 		return transformationName;
@@ -33,8 +48,9 @@ public class Step {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        
+        result = prime * result + ((stepElement.ownText() == null) ? 0 : stepElement.ownText().hashCode());
+        
         return result;
     }
 	
@@ -50,10 +66,11 @@ public class Step {
        Step step=(Step)obj;
         return 
         
-                 (name == step.getName() 
-                     || (name != null && name.equals(step.getName())))
-                && (type == step.getType()
-                     || (type != null && type.equals(step.getType())));
+               (
+                    stepElement.ownText().equals(step.getStepElement().ownText())
+                    )
+                    
+                    ;
                      
     }
 	
@@ -69,7 +86,7 @@ public class Step {
 			{
 				stepsNames=step.getName()+" and "+this.getName();
 			}
-			if(!type.equals("Dummy")){
+			if(!type.equals("Dummy")&&!stepElement.ownText().equals(step.getStepElement().ownText())){
 			result=Format.formatAsParagraph("Steps "+stepsNames+" are of the same type "+type+". Comparison for these types is not implemented",Format.getParagraphNotImplemented());
 			}
 		}else{

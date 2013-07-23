@@ -7,6 +7,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
+
+
 public class SelectValues extends Step {
 	
 	public Set<LookupField> getmFields() {
@@ -128,7 +130,46 @@ public class SelectValues extends Step {
        
 		
 		if(selectValues.getmFields()!=null && !mFields.equals(selectValues.getmFields())){
-			result=result+"Different fields in "+this.getName();
+			String divId=this.getTransformationName()+"_"+this.getName()+"_fields";
+			result=result+Format.formatAsLinkToUnfold("Different fields in "+this.getName(),divId);
+			Set<LookupField> sameFields = new HashSet<LookupField>();
+			for(LookupField field: selectValues.getmFields()){				
+				if(this.getmFields().contains(field)){					
+					sameFields.add(field);
+				}
+				
+			}
+			String fieldsSet1="";
+			String fieldsSet2="";
+			if(sameFields.size()!=selectValues.getmFields().size()){
+				 fieldsSet1=fieldsSet1+Format.formatAsHeader("Missing fields: ",4);
+				String tempResult="";
+			for(LookupField field: selectValues.getmFields() ){
+				if(!sameFields.contains(field)){
+					tempResult=tempResult+Format.formatAsListItem(field.printLookupField())+"\n";
+				}
+			}
+			tempResult=Format.formatAsList(tempResult);
+			fieldsSet1=fieldsSet1+tempResult;
+			}
+			
+			if(sameFields.size()!=this.getmFields().size()){
+				 fieldsSet2=fieldsSet2+Format.formatAsHeader("New fields: ",4);
+				String tempResult="";
+				for(LookupField field: this.getmFields() ){
+					if(!sameFields.contains(field)){
+						tempResult=tempResult+Format.formatAsListItem(field.printLookupField())+"\n";
+					}
+				}
+				tempResult=Format.formatAsList(tempResult);
+				fieldsSet2=fieldsSet2+tempResult;
+				}
+			
+			
+			
+			result=result+Format.formatAsDiv(fieldsSet1+fieldsSet2, divId);
+			
+			
 		}
 		if(selectValues.getmMetaFields()!=null&&!mMetaFields.equals(selectValues.getmMetaFields())){
 			result=result+"Different meta fields in "+this.getName();

@@ -135,12 +135,17 @@ public class Hello {
 				}
 				//System.out.println(transformation.getDirectory() + "/" + transformation.getName()+" - unchanged");
 			}
-			else if(transformationsFromDoc2.get(transFromDoc1Name)!=null&&transformation.hasThesameName(transformationsFromDoc2.get(transFromDoc1Name)))
+			else if(transformationsFromDoc2.get(transFromDoc1Name)!=null
+					&&transformation.hasThesameName(transformationsFromDoc2.get(transFromDoc1Name))
+					
+			)
 				
 			{
+				if(!transformation.compare(transformationsFromDoc2.get(transFromDoc1Name)).equals("")){
 				outputStream.println(Format.formatAsHeader(Format.formatAsLinkToUnfold(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - changed",Format.getIdChanged()),transformation.getName()),2));
 				outputStream.println(Format.formatAsDiv(transformation.compare(transformationsFromDoc2.get(transFromDoc1Name)),transformation.getName()));
 			}
+				}
 			else{
 				outputStream.println(Format.formatAsHeader(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - not found",Format.getIdNotFound()),2));
 			}

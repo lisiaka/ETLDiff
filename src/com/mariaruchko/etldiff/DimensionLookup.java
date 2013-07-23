@@ -195,19 +195,61 @@ public class DimensionLookup extends Step {
         DimensionLookup mDimensionLookup=(DimensionLookup)step;
        
 		if(!connection.equals(mDimensionLookup.getConnection())){
-			result=result+"Different connections "+connection+ " vs "+mDimensionLookup.getConnection()+" in "+mDimensionLookup.getName();
+			result=result+"Different connections "+Format.formatWordInsideParagraph(connection,Format.getIdNameInText())
+			+ " vs "+Format.formatWordInsideParagraph(mDimensionLookup.getConnection(),Format.getIdNameInText())+" in "+mDimensionLookup.getName();
 		}
 		if(!table.equals(mDimensionLookup.getTable())){
-			result=result+"Different tables "+table+ " vs "+mDimensionLookup.getTable()+" in "+mDimensionLookup.getName();
+			result=result+"Different tables "+Format.formatWordInsideParagraph(table,Format.getIdNameInText())
+			+ " vs "+Format.formatWordInsideParagraph(mDimensionLookup.getTable(),Format.getIdNameInText())+" in "+mDimensionLookup.getName();
 		}
 		if(!fields.equals(mDimensionLookup.getFields())){
-			result=result+"Different fields in "+mDimensionLookup.getName();
+			String divId=this.getTransformationName()+"_"+this.getName()+"_fields";
+			result=result+Format.formatAsLinkToUnfold("Different fields in "+mDimensionLookup.getName(),divId);
+			Set<Field> sameFields = new HashSet<Field>();
+			for(Field field: mDimensionLookup.getFields()){				
+				if(this.getFields().contains(field)){					
+					sameFields.add(field);
+				}
+				
+			}
+			String fieldsSet1="";
+			String fieldsSet2="";
+			if(sameFields.size()!=mDimensionLookup.getFields().size()){
+				 fieldsSet1=fieldsSet1+Format.formatAsHeader("Missing fields: ",4);
+				String tempResult="";
+			for(Field field: mDimensionLookup.getFields() ){
+				if(!sameFields.contains(field)){
+					tempResult=tempResult+Format.formatAsListItem(field.printField())+"\n";
+				}
+			}
+			tempResult=Format.formatAsList(tempResult);
+			fieldsSet1=fieldsSet1+tempResult;
+			}
+			
+			if(sameFields.size()!=this.getFields().size()){
+				 fieldsSet2=fieldsSet2+Format.formatAsHeader("New fields: ",4);
+				String tempResult="";
+				for(Field field: this.getFields() ){
+					if(!sameFields.contains(field)){
+						tempResult=tempResult+Format.formatAsListItem(field.printField())+"\n";
+					}
+				}
+				tempResult=Format.formatAsList(tempResult);
+				fieldsSet2=fieldsSet2+tempResult;
+				}
+			
+			
+			
+			result=result+Format.formatAsDiv(fieldsSet1+fieldsSet2, divId);
+			
 		}
 		if(!dateFromField.equals(mDimensionLookup.getDateFromField())){
-			result=result+"Different dateFrom "+dateFromField+" vs "+mDimensionLookup.getDateFromField()+" in "+mDimensionLookup.getName();
+			result=result+"Different dateFrom "+Format.formatWordInsideParagraph(dateFromField,Format.getIdNameInText())+" vs "
+			+Format.formatWordInsideParagraph(mDimensionLookup.getDateFromField(),Format.getIdNameInText())+" in "+mDimensionLookup.getName();
 		}
 		if(!dateToField.equals(mDimensionLookup.getDateToField())){
-			result=result+"Different dateTo "+dateToField+" vs "+mDimensionLookup.getDateToField()+" in "+mDimensionLookup.getName();
+			result=result+"Different dateTo "+Format.formatWordInsideParagraph(dateToField,Format.getIdNameInText())+" vs "
+			+Format.formatWordInsideParagraph(mDimensionLookup.getDateToField(),Format.getIdNameInText())+" in "+mDimensionLookup.getName();
 		}
 		else{
 			//result=mDimensionLookup.getName()+" steps are identical.";

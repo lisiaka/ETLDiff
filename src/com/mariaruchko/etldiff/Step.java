@@ -5,7 +5,14 @@ package com.mariaruchko.etldiff;
 public class Step {
 	private String name;
 	private String type;
+	private String transformationName;
 	
+	public String getTransformationName() {
+		return transformationName;
+	}
+	public void setTransformationName(String transformationName) {
+		this.transformationName = transformationName;
+	}
 	public String getName() {
 		return name;
 	}
@@ -62,9 +69,11 @@ public class Step {
 			{
 				stepsNames=step.getName()+" and "+this.getName();
 			}
-			result=Format.formatAsParagraph("Steps "+stepsNames+" are of the same type "+type+". Comparison for these types is not implemented","notimplemented");
+			if(!type.equals("Dummy")){
+			result=Format.formatAsParagraph("Steps "+stepsNames+" are of the same type "+type+". Comparison for these types is not implemented",Format.getParagraphNotImplemented());
+			}
 		}else{
-			result=Format.formatAsParagraph("Incompatible types "+type+" and "+step.getType(),"details");
+			result=Format.formatAsParagraph("Incompatible types "+type+" and "+step.getType(),Format.getParagraphDetails());
 		}
 		// TODO Auto-generated method stub
 		return result;

@@ -57,7 +57,8 @@ public class LookupField {
 	
 	
 	public String printLookupField(){
-		return "name: "+name+(rename!=null?"; rename: "+rename:"");
+		return Format.formatAsParagraph("name: "+Format.formatWordInsideParagraph(name,Format.getIdCodeInText())+(rename!=null?"; rename: "
+				+Format.formatWordInsideParagraph(rename,Format.getIdCodeInText()):""),"");
 	}
 }
 

@@ -17,6 +17,9 @@ public class Transformation {
 	private final static String SYSTEM_INFO="SystemInfo";
 	private final static String TABLE_OUTPUT="TableOutput";
 	private final static String SELECT_VALUES="SelectValues";
+	private final static String STREAM_LOOKUP="StreamLookup";
+	private final static String TEXT_FILE_OUTPUT="TextFileOutput";
+	
 	private String name;
 	private String directory;
 	private Map<String,Step> mSteps;
@@ -40,6 +43,7 @@ public class Transformation {
 
 			if (type.equalsIgnoreCase(TABLE_INPUT)) {
 				newStep = new TableInputStep(stepElement);
+				
 			} else if (type.equalsIgnoreCase(DIMENSION_LOOKUP)) {
 				newStep = new DimensionLookup(stepElement);
 			} else if (type.equalsIgnoreCase(SCRIPT_VALUE_LOOKUP)) {
@@ -52,12 +56,17 @@ public class Transformation {
 				newStep = new TableOutput(stepElement);
 			}else if (type.equalsIgnoreCase(SELECT_VALUES)) {
 				newStep = new SelectValues(stepElement);
+			}else if (type.equalsIgnoreCase(STREAM_LOOKUP)) {
+				newStep = new StreamLookup(stepElement);
+			}else if (type.equalsIgnoreCase(TEXT_FILE_OUTPUT)) {
+				newStep = new TextFileOutput(stepElement);
 			}else {
 				newStep = new Step();
 			}
 
 			newStep.setName(stepElement.select("name").first().text());
 			newStep.setType(stepElement.select("type").first().text());
+			newStep.setTransformationName(this.getName());
 
 			if (mSteps == null){
 				this.mSteps = new HashMap<String,Step>();
@@ -166,10 +175,14 @@ public class Transformation {
 				result=result+Format.formatAsHeader("New steps: ",4);
 				String tempResult="";
 			for(String stepName: transformation.getSteps().keySet() ){
+				
 				if(!sameSteps.contains(stepName)){
-					tempResult=tempResult+Format.formatAsListItem(stepName+" ("+transformation.getSteps().get(stepName).getType()+")"+transformation.getSteps().get(stepName).printProperties())+"\n";
+					String divId=this.name+"_"+stepName;
+					tempResult=tempResult+Format.formatAsListItem(Format.formatAsLinkToUnfold(stepName+" ("+transformation.getSteps().get(stepName).getType()+")",divId)
+							+Format.formatAsDiv(transformation.getSteps().get(stepName).printProperties(), divId))+"\n";
 				}
 			}
+			tempResult=Format.formatAsList(tempResult);
 			result=result+tempResult;
 			}
 
@@ -178,9 +191,12 @@ public class Transformation {
 			String tempResult="";
 			for(String stepName: this.getSteps().keySet() ){
 				if(!sameSteps.contains(stepName)){
-					tempResult=tempResult+stepName+" ("+this.getSteps().get(stepName).getType()+")"+this.getSteps().get(stepName).printProperties()+"\n";
+					String divId=this.name+"_"+stepName;
+					tempResult=tempResult+Format.formatAsListItem(Format.formatAsLinkToUnfold(stepName+" ("+this.getSteps().get(stepName).getType()+")",divId)
+							+Format.formatAsDiv(this.getSteps().get(stepName).printProperties(), divId))+"\n";
 				}
 			}
+			tempResult=Format.formatAsList(tempResult);
 			result=result+tempResult;
 			}
 

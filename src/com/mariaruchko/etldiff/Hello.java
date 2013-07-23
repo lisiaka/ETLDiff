@@ -130,7 +130,7 @@ public class Hello {
 
 			if(transformation.equals(transformationsFromDoc2.get(transFromDoc1Name))){
 				if(transformationsFromDoc2.get("c_"+transFromDoc1Name)!=null&&!transformationsFromDoc11.containsKey("c_"+transFromDoc1Name)){
-					outputStream.println(Format.formatAsHeader(Format.formatAsLinkToUnfold(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - customized ","customized"),transformation.getName()),2));
+					outputStream.println(Format.formatAsHeader(Format.formatAsLinkToUnfold(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - customized ",Format.getIdCustomized()),transformation.getName()),2));
 					outputStream.println(Format.formatAsDiv(transformation.compare(transformationsFromDoc2.get("c_"+transFromDoc1Name)),transformation.getName()));
 				}
 				//System.out.println(transformation.getDirectory() + "/" + transformation.getName()+" - unchanged");
@@ -138,11 +138,11 @@ public class Hello {
 			else if(transformationsFromDoc2.get(transFromDoc1Name)!=null&&transformation.hasThesameName(transformationsFromDoc2.get(transFromDoc1Name)))
 				
 			{
-				outputStream.println(Format.formatAsHeader(Format.formatAsLinkToUnfold(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - changed","changed"),transformation.getName()),2));
+				outputStream.println(Format.formatAsHeader(Format.formatAsLinkToUnfold(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - changed",Format.getIdChanged()),transformation.getName()),2));
 				outputStream.println(Format.formatAsDiv(transformation.compare(transformationsFromDoc2.get(transFromDoc1Name)),transformation.getName()));
 			}
 			else{
-				outputStream.println(Format.formatAsHeader(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - not found","notfound"),2));
+				outputStream.println(Format.formatAsHeader(transformation.getDirectory() + "/" + transformation.getName()+Format.formatWordInsideParagraph(" - not found",Format.getIdNotFound()),2));
 			}
 		};
 		

@@ -50,7 +50,7 @@ public class TableInputStep extends Step {
 	}
 	
 	public String printProperties() {
-		return this.getName()+": "+this.getType()+"; connection: "+connection+"; sql: "+Format.formatAsParagraph(sql, "sql");
+		return this.getName()+": "+this.getType()+"; connection: "+connection+Format.formatAsHeader("sql: ",5)+Format.formatAsParagraph(sql, "sql");
 	}
 
 	@Override
@@ -71,7 +71,12 @@ public class TableInputStep extends Step {
 		
 		
 		if(!sql.equals(tableInputStep.getSql())){
-			result=result+"Different sql in "+this.getName();
+			String divId=this.getTransformationName()+"_"+this.getName()+"_sql";
+			String sqlFormat=Format.getParagraphSql();
+			result=result+Format.formatAsLinkToUnfold("Different sql in "+this.getName(),divId);
+			result=result+Format.formatAsDiv(Format.formatAsParagraph(sql,sqlFormat)+"vs"+Format.formatAsParagraph(tableInputStep.getSql(),sqlFormat), divId);
+			
+			
 		}
 		else{
 			//result=tableInputStep.getName()+" steps are identical.";
